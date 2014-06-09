@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MLPAutoCompleteTextField.h"
 
 @interface ViewController : UIViewController
 

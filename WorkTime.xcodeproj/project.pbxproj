@@ -21,6 +21,12 @@
 		6CC15401194615500061F35B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CC153E3194615500061F35B /* UIKit.framework */; };
 		6CC15409194615500061F35B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6CC15407194615500061F35B /* InfoPlist.strings */; };
 		6CC1540B194615500061F35B /* WorkTimeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CC1540A194615500061F35B /* WorkTimeTests.m */; };
+		6CFF2B5A19461671009460B5 /* LocationAutoCompletionObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CFF2B5819461671009460B5 /* LocationAutoCompletionObject.m */; };
+		6CFF2B5D194616E8009460B5 /* state_incomes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6CFF2B5B194616E8009460B5 /* state_incomes.txt */; };
+		6CFF2B5E194616E8009460B5 /* states.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6CFF2B5C194616E8009460B5 /* states.txt */; };
+		6CFF2B60194620A7009460B5 /* federal_income.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6CFF2B5F194620A7009460B5 /* federal_income.txt */; };
+		6CFF2B6219462372009460B5 /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 6CFF2B6119462372009460B5 /* arrow.png */; };
+		C7A3E5A229644B36A7710D48 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 959B78B227494B2F9BE5A828 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +59,14 @@
 		6CC15406194615500061F35B /* WorkTimeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WorkTimeTests-Info.plist"; sourceTree = "<group>"; };
 		6CC15408194615500061F35B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6CC1540A194615500061F35B /* WorkTimeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WorkTimeTests.m; sourceTree = "<group>"; };
+		6CFF2B5719461671009460B5 /* LocationAutoCompletionObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationAutoCompletionObject.h; sourceTree = "<group>"; };
+		6CFF2B5819461671009460B5 /* LocationAutoCompletionObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationAutoCompletionObject.m; sourceTree = "<group>"; };
+		6CFF2B5B194616E8009460B5 /* state_incomes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = state_incomes.txt; sourceTree = "<group>"; };
+		6CFF2B5C194616E8009460B5 /* states.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = states.txt; sourceTree = "<group>"; };
+		6CFF2B5F194620A7009460B5 /* federal_income.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = federal_income.txt; sourceTree = "<group>"; };
+		6CFF2B6119462372009460B5 /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
+		6FB78AD320E946A985F25471 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		959B78B227494B2F9BE5A828 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +77,7 @@
 				6CC153E2194615500061F35B /* CoreGraphics.framework in Frameworks */,
 				6CC153E4194615500061F35B /* UIKit.framework in Frameworks */,
 				6CC153E0194615500061F35B /* Foundation.framework in Frameworks */,
+				C7A3E5A229644B36A7710D48 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,6 +101,7 @@
 				6CC15404194615500061F35B /* WorkTimeTests */,
 				6CC153DE194615500061F35B /* Frameworks */,
 				6CC153DD194615500061F35B /* Products */,
+				6FB78AD320E946A985F25471 /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -105,6 +121,7 @@
 				6CC153E1194615500061F35B /* CoreGraphics.framework */,
 				6CC153E3194615500061F35B /* UIKit.framework */,
 				6CC153FE194615500061F35B /* XCTest.framework */,
+				959B78B227494B2F9BE5A828 /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -117,7 +134,13 @@
 				6CC153F1194615500061F35B /* Main.storyboard */,
 				6CC153F4194615500061F35B /* ViewController.h */,
 				6CC153F5194615500061F35B /* ViewController.m */,
+				6CFF2B5719461671009460B5 /* LocationAutoCompletionObject.h */,
+				6CFF2B5819461671009460B5 /* LocationAutoCompletionObject.m */,
 				6CC153F7194615500061F35B /* Images.xcassets */,
+				6CFF2B6119462372009460B5 /* arrow.png */,
+				6CFF2B5B194616E8009460B5 /* state_incomes.txt */,
+				6CFF2B5F194620A7009460B5 /* federal_income.txt */,
+				6CFF2B5C194616E8009460B5 /* states.txt */,
 				6CC153E6194615500061F35B /* Supporting Files */,
 			);
 			path = WorkTime;
@@ -159,9 +182,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6CC1540E194615500061F35B /* Build configuration list for PBXNativeTarget "WorkTime" */;
 			buildPhases = (
+				82A9B52312EC4B2F91F091EE /* Check Pods Manifest.lock */,
 				6CC153D8194615500061F35B /* Sources */,
 				6CC153D9194615500061F35B /* Frameworks */,
 				6CC153DA194615500061F35B /* Resources */,
+				EB11C2F8BE8448398155D9DF /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -229,8 +254,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				6CC153F8194615500061F35B /* Images.xcassets in Resources */,
+				6CFF2B5D194616E8009460B5 /* state_incomes.txt in Resources */,
 				6CC153EA194615500061F35B /* InfoPlist.strings in Resources */,
 				6CC153F3194615500061F35B /* Main.storyboard in Resources */,
+				6CFF2B5E194616E8009460B5 /* states.txt in Resources */,
+				6CFF2B6219462372009460B5 /* arrow.png in Resources */,
+				6CFF2B60194620A7009460B5 /* federal_income.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,11 +273,45 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		82A9B52312EC4B2F91F091EE /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		EB11C2F8BE8448398155D9DF /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		6CC153D8194615500061F35B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6CFF2B5A19461671009460B5 /* LocationAutoCompletionObject.m in Sources */,
 				6CC153F6194615500061F35B /* ViewController.m in Sources */,
 				6CC153F0194615500061F35B /* AppDelegate.m in Sources */,
 				6CC153EC194615500061F35B /* main.m in Sources */,
@@ -373,6 +436,7 @@
 		};
 		6CC1540F194615500061F35B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6FB78AD320E946A985F25471 /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -386,6 +450,7 @@
 		};
 		6CC15410194615500061F35B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6FB78AD320E946A985F25471 /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -456,6 +521,7 @@
 				6CC15410194615500061F35B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		6CC15411194615500061F35B /* Build configuration list for PBXNativeTarget "WorkTimeTests" */ = {
 			isa = XCConfigurationList;
@@ -464,6 +530,7 @@
 				6CC15413194615500061F35B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
