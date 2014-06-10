@@ -14,4 +14,6 @@
 -(id)initWithState:(NSString *)state andCountry:(NSString *)country;
 -(id)initWithCountry:(NSString *)country;
 
+-(NSString *)getStateString;
+
 @end

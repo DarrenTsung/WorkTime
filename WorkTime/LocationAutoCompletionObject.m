@@ -36,6 +36,13 @@
     return self;
 }
 
+#pragma mark - GetInformation
+
+- (NSString *)getStateString
+{
+    return _state;
+}
+
 #pragma mark - MLPAutoCompletionObject Protocol
 
 - (NSString *)autocompleteString

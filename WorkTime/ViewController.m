@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "MainViewController.h"
 #import "LocationAutoCompletionObject.h"
 
 @interface ViewController ()
@@ -14,8 +15,13 @@
 @property(nonatomic, strong) NSArray *autocompletionObjects;
 @property(nonatomic, strong) IBOutlet UITextField *wageField;
 @property(nonatomic, strong) IBOutlet MLPAutoCompleteTextField *autocompleteField;
-@property(nonatomic, strong) NSDictionary *stateTaxesTable;
-@property(nonatomic, strong) NSArray *federalTaxesArray;
+@property(nonatomic, strong) NSMutableSet *stateSet;
+@property(nonatomic, strong) IBOutlet UILabel *errorText;
+@property(nonatomic, strong) IBOutlet UILabel *wageLabel;
+@property(nonatomic, strong) IBOutlet UISegmentedControl *wageType;
+
+@property(nonatomic) double wagePerYearStored;
+@property(nonatomic, weak) NSString *stateStored;
 
 @end
 
@@ -37,12 +43,15 @@
     [self.autocompleteField setAutocorrectionType:UITextAutocorrectionTypeNo];
     [self.autocompleteField setAutocapitalizationType:UITextAutocapitalizationTypeWords];
     
+    _stateSet = [[NSMutableSet alloc] init];
+    
     // load the state csv file
     [self loadStateCSVFile:@"states" withType:@"txt"];
-    // load the state income taxes file
-    [self loadStateIncomeTax:@"state_incomes" withType:@"txt"];
-    // load the federal income taxes file
-    [self loadFederalIncomeTax:@"federal_income" withType:@"txt"];
+    
+    // Add a "textFieldDidChange" notification method to the text field control.
+    [_wageField addTarget:self
+                  action:@selector(textFieldDidChange:)
+        forControlEvents:UIControlEventEditingChanged];
 }
 
 - (void)didReceiveMemoryWarning
@@ -51,115 +60,93 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - IncomeTax DataSource
-
-- (void)loadFederalIncomeTax:(NSString *)filename withType:(NSString *)type
-{
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:filename ofType:type];
-    NSError *error;
-    NSString *fileContents = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:&error];
-    
-    if (error)
-        NSLog(@"Error reading file: %@", error.localizedDescription);
-    
-    NSArray *listArray = [fileContents componentsSeparatedByString:@"\n"];
-    NSMutableArray *federalBrackets = [[NSMutableArray alloc] init];
-    for (NSString *str in listArray)
-    {
-        NSArray *components = [str componentsSeparatedByString:@","];
-        NSNumberFormatter *numFormatter = [[NSNumberFormatter alloc] init];
-        
-        if ([components count] >= 2)
-        {
-            NSNumber *taxPercentage = [numFormatter numberFromString:components[0]];
-            NSNumber *taxBracket = [numFormatter numberFromString:components[1]];
-            
-            [federalBrackets addObject:@[taxPercentage, taxBracket]];
-        }
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    UITouch * touch = [touches anyObject];
+    if(touch.phase == UITouchPhaseBegan) {
+        [self.view endEditing:YES];
     }
-    _federalTaxesArray = federalBrackets;
 }
 
-- (double)getFederalIncomePercentageForIncome:(double)income
+#pragma mark - income
+
+// format the cost correctly (decimal style)
+- (void)textFieldDidChange:(UITextField *)textField
 {
-    double taxPercentage = 0.00;
-    double highestIncomeBracket = 0.0;
-    for (NSArray *taxBracket in _federalTaxesArray)
+    NSNumberFormatter *numFormatter = [[NSNumberFormatter alloc] init];
+    
+    NSString *textFieldText = textField.text;
+    // the number representation of the textfield
+    NSNumber *currCost = [numFormatter numberFromString:textFieldText];
+    
+    // cap the maximum representation at 999,999,999
+    if ([currCost doubleValue] > 999999999)
     {
-        double currTaxPercentage = [[taxBracket objectAtIndex:0] doubleValue];
-        double minIncome = [[taxBracket objectAtIndex:1] doubleValue];
-        // if our income is higher than the minimum income to qualify for the tax bracket
-        // and we haven't qualified for a higher bracket
-        if (income >= minIncome && minIncome >= highestIncomeBracket)
-        {
-            taxPercentage = currTaxPercentage;
-            highestIncomeBracket = minIncome;
-        }
+        currCost = [NSNumber numberWithDouble:999999999];
+        textField.text = @"999999999";
     }
-    return taxPercentage;
+    
+    [numFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    [numFormatter setMaximumFractionDigits:2];
+    
+    // empty string if the current cost is blank
+    NSString *formattedText = ([currCost doubleValue] == 0) ? @"" : [NSString stringWithFormat:@"$%@", [numFormatter stringFromNumber:currCost]];
+    
+    _wageLabel.text = formattedText;
 }
 
+#pragma mark - Transitions
 
-- (void)loadStateIncomeTax:(NSString *)filename withType:(NSString *)type
+-(IBAction)checkStateAndSegue
 {
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:filename ofType:type];
-    NSError *error;
-    NSString *fileContents = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:&error];
+    NSNumberFormatter *numForm = [[NSNumberFormatter alloc] init];
+    double wagePerYear = [[numForm numberFromString:_wageField.text] doubleValue];
     
-    if (error)
-        NSLog(@"Error reading file: %@", error.localizedDescription);
+    // if the first segment is selected convert the wage to dollars per year
+    if ([_wageType selectedSegmentIndex] == 0)
+        wagePerYear *= 2008;
     
-    NSArray *listArray = [fileContents componentsSeparatedByString:@"\n"];
-    NSMutableDictionary *stateTaxesDict = [[NSMutableDictionary alloc] init];
-    NSString *key = @"";
-    NSMutableArray *value = [[NSMutableArray alloc] init];
-    for (NSString *str in listArray)
+    if (wagePerYear < 1)
     {
-        // two types of lines in the file, state name and income taxes by bracket
-        // if the string does not contain a comma (',') then it is the former type
-        if ([str rangeOfString:@","].location == NSNotFound) {
-            if (![key isEqualToString:@""])
+        _errorText.text = @"Please enter a valid income greater than $1/hr or $2008/year";
+        return;
+    }
+    
+    _wagePerYearStored = wagePerYear;
+    
+    NSString *locationField = _autocompleteField.text;
+    NSArray *locArray = [locationField componentsSeparatedByString:@","];
+    if ([locArray count] == 2)
+    {
+        NSString *state = [[[locArray objectAtIndex:0] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] capitalizedString];
+        if ([_stateSet containsObject:state])
+        {
+            _stateStored = [locArray objectAtIndex:0];
+            NSString *countryCode = [[[locArray objectAtIndex:1] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
+            if ([countryCode isEqualToString:@"US"])
             {
-                [stateTaxesDict setObject:value forKey:key];
-                value = [[NSMutableArray alloc] init];
+                [self performSegueWithIdentifier:@"main" sender:self];
             }
-            key = str;
+            else
+            {
+                _errorText.text = @"Please use the country code 'US'.";
+            }
         }
         else
         {
-            NSArray *components = [str componentsSeparatedByString:@","];
-            NSNumberFormatter *numFormatter = [[NSNumberFormatter alloc] init];
-            
-            if ([components count] >= 2)
-            {
-                NSNumber *taxPercentage = [numFormatter numberFromString:components[0]];
-                NSNumber *taxBracket = [numFormatter numberFromString:components[1]];
-                
-                [value addObject:@[taxPercentage, taxBracket]];
-            }
+            _errorText.text = @"Please enter a valid state in the US.";
         }
     }
-    _stateTaxesTable = stateTaxesDict;
+    else
+    {
+        _errorText.text = @"Please enter a valid location in the US.";
+    }
 }
 
-- (double)getStateIncomePercentageForState:(NSString *)stateName andIncome:(double)income
-{
-    NSArray *taxes = [_stateTaxesTable objectForKey:stateName];
-    double taxPercentage = 0.00;
-    double highestIncomeBracket = 0.0;
-    for (NSArray *taxBracket in taxes)
-    {
-        double currTaxPercentage = [[taxBracket objectAtIndex:0] doubleValue];
-        double minIncome = [[taxBracket objectAtIndex:1] doubleValue];
-        // if our income is higher than the minimum income to qualify for the tax bracket
-        // and we haven't qualified for a higher bracket
-        if (income >= minIncome && minIncome >= highestIncomeBracket)
-        {
-            taxPercentage = currTaxPercentage;
-            highestIncomeBracket = minIncome;
-        }
-    }
-    return taxPercentage;
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    [super prepareForSegue:segue sender:sender];
+    
+    MainViewController *mainViewController = segue.destinationViewController;
+    [mainViewController setIncome:_wagePerYearStored andState:_stateStored];
 }
 
 #pragma mark - MLPAutoCompleteTextField DataSource
@@ -179,6 +166,7 @@
     {
         NSArray *stateArray = [stateString componentsSeparatedByString:@","];
         LocationAutoCompletionObject *completionObject = [[LocationAutoCompletionObject alloc] initWithState:[stateArray objectAtIndex:0] andCountry:@"US"];
+        [_stateSet addObject:[stateArray objectAtIndex:0]];
         [completions addObject:completionObject];
     }
     _autocompletionObjects = completions;
@@ -209,11 +197,8 @@
        withAutoCompleteObject:(id<MLPAutoCompletionObject>)selectedObject
             forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(selectedObject){
+    if(selectedObject) {
         NSLog(@"selected object from autocomplete menu %@ with string %@", selectedObject, [selectedObject autocompleteString]);
-        
-        // remove the text in the autocompleteTextField
-        [self.autocompleteField setText:@""];
         
         // close the keyboard
         [self.view endEditing:YES];
